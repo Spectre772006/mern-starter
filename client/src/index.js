@@ -1,3 +1,5 @@
+import { AddressProvider } from "./context/AddressContext";
+import { CartProvider } from "./context/CartContext";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
@@ -7,12 +9,15 @@ import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+  <AuthProvider>
+    <CartProvider>
+      <AddressProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AddressProvider>
+    </CartProvider>
+  </AuthProvider>
 );

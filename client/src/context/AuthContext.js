@@ -1,47 +1,46 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import api from "../services/api";
+import { createContext, useContext, useState } from "react";
+import { useEffect } from "react";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Run once when app loads
+  const [user, setUser] = useState(null); 
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    const token = localStorage.getItem("token");
+  const savedToken = localStorage.getItem("token");
+  if (savedToken) {
+    setToken(savedToken);
+  }
+}, []);
 
-    if (token) {
-      // In future we can call /me API here
-      setUser({ token });
-    }
 
-    setLoading(false);
-  }, []);
+  const login = (userData, authToken) => {
+  setUser(userData);
+  setToken(authToken);
+  localStorage.setItem("token", authToken);
+};
 
-  const login = async (email, password) => {
-    const res = await api.post("/auth/login", {
-      email,
-      password,
-    });
 
-    localStorage.setItem("token", res.data.token);
-    setUser(res.data.user);
-  };
+ const logout = () => {
+  setUser(null);
+  setToken(null);
+  localStorage.removeItem("token");
+};
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-  };
+  const isAuthenticated = !!token || !!localStorage.getItem("token");
+
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        token,
         login,
         logout,
-        isAuthenticated: !!user,
+        isAuthenticated,
         loading,
+        setLoading,
       }}
     >
       {children}

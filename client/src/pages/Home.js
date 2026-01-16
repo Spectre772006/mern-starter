@@ -1,25 +1,23 @@
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import React from "react";
+import products from "../data/products";
+import ProductCard from "../components/ProductCard";
 
-function Home() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
+const Home = () => {
   return (
-    <div style={{ padding: "40px", textAlign: "center" }}>
-      <h1>Home</h1>
-      <p>You are logged in 🎉</p>
+    <div className="bg-gray-100 min-h-screen p-6">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-2xl font-semibold mb-6">
+          Recommended for you
+        </h2>
 
-      <button onClick={handleLogout}>
-        Logout
-      </button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default Home;
